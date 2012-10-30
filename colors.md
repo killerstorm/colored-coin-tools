@@ -1,6 +1,8 @@
-= Colored coins =
+Colored coins
+=============
 
-== Overview ==
+Overview
+--------
 
 "Colored coins" is a scheme which allows one to assign labels ("colors") to transction outputs ("coins") in such a way that this assignment maintains useful properties:
 
@@ -11,7 +13,8 @@ These properties allow one to use colored coins as if they were separate currenc
 
 There are several proposed coloring schemes, one described here is known as "order-based weak coloring". 
 
-== Recursive color tracking ==
+Recursive color tracking
+------------------------
 
 Transaction output is recognized as colored when it can be unambiguously traced down to color-issuing transaction outputs, which are colored by definition.
 
@@ -23,7 +26,8 @@ However, this is just a definition of coloring. Although a "colored coin client"
 
 For example, it is possible to scan blockchain sequentially from the start, noting all colored transactions. It is possible because we can compute colors for each individual transaction independently as long as we know input colors, and if we scan transactions sequentially we always know colors of inputs by the time transaction is considered.
 
-== Order-based coloring ==
+Order-based coloring
+--------------------
 
 Definition above left "matching" undefined. In order-based coloring inputs and outputs are matched according to the order they appear in transaction.
 
@@ -70,7 +74,8 @@ Function `computer_colors` performs color computation for one transaction. The r
 
 Note that this function also implements coloring of zero-valued outputs, without support for them it would be considerably shorter.
 
-== Zero-valued outputs (optional) ==
+Zero-valued outputs (optional)
+------------------------------
 
 Some smart property proposals advocated use of zero-valued outputs to denote ownership of a property. We currently do not recommend using them as it is usually not a problem to use at least 1 satoshi for a colored transaction output. But we want to make our algorithms compatible with such use.
 
@@ -86,7 +91,8 @@ Otherwise we match inputs/outputs at same preceding sum ("height") one-to-one, i
 
 Function `compute_colors` mentioned above implements coloring of zero-valued outputs within a single transaction.
 
-== Rules for well-formed colored coin transactions ==
+Rules for well-formed colored coin transactions
+-----------------------------------------------
 
 One transaction can include coins of different colors. This might be useful, particularly, for 'atomic coin swapping': a transaction which trades colored coins of one user for colored coins of another user.
 
@@ -97,7 +103,8 @@ Rules listed above allow one to preserve color labels even if some of parties in
 3. Fee should be paid using uncolored coins. If it is absolutely necessary to pay fee with colored coins, that color should go the last.
 4. Total value of coins of each color should be preserved.
 
-== Color definitions ==
+Color definitions
+-----------------
 
 We want to give users an ability to issue coloring coins as they want. To issue coins client software should prepare a transaction with output having a desired number of satoshis, and then it should prepare a color definition file. Color definition includes:
 
