@@ -21,8 +21,10 @@ def ComputeColorMetaHash(props):
            mv = props[mn]
            if isinstance(mv, (int, long)):
                mv = str(mv)
-           if not isinstance(mv, str):
+           if not isinstance(mv, (str, unicode)):
                raise Exception("ComputeColorID: meta data must be string or integer")
+           mv = mv.encode("utf-8")
+           mn = mn.encode("utf-8")
            meta_list.append(mn)
            meta_list.append(mv)
        meta = ':'.join(meta_list)
@@ -43,7 +45,7 @@ def ComputeColorID(props):
          data_list.append(issue["txhash"])
          data_list.append(str(issue["outindex"]))
    elif style == "address":
-      data_lis.append(props["address_pkhash"])
+      data_list.append(props["address_pkhash"])
    else:
       raise Exception("unknown colordef style")
 
@@ -57,6 +59,13 @@ def ComputeColorID(props):
    print definition_string
 
    return binary_to_hex(hash160(definition_string.encode("utf-8")))
+
+def FinalizeColorDef(x):
+    metahash = ComputeColorMetaHash(x)
+    if metahash:
+        x['metahash'] = metahash
+    x['colorid'] = ComputeColorID(x)
+    return x
 
 def ValidateColorDefinition(props):
     metahash = ComputeColorMetaHash(props)
