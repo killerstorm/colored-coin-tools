@@ -60,7 +60,7 @@ def ComputeColorID(props):
 
    return binary_to_hex(hash160(definition_string.encode("utf-8")))
 
-def FinalizeColorDef(x):
+def FinalizeColorDefinition(x):
     metahash = ComputeColorMetaHash(x)
     if metahash:
         x['metahash'] = metahash

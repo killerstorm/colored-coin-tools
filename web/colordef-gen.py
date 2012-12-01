@@ -6,7 +6,10 @@ import colordefs
 import json
 import os
 
-urls = ('/', 'index')
+urls = (
+    '/', 'index',
+    '/publish', 'publish'
+)
 
 render = web.template.render('templates/')
 
@@ -40,7 +43,7 @@ def colordef_from_form(form):
         x['address_pkhash'] = data.strip()
     else:
         raise Exception("unknown color defintion style")
-    colordefs.FinalizeColorDef(x)
+    colordefs.FinalizeColorDefinition(x)
     if not colordefs.ValidateColorDefinition(x):
         raise Exception("somehow validation failed")
     return x
@@ -74,6 +77,26 @@ class index:
                 return "Could not save your color definition: %s" % e
             url = "/static/colordefs/%s.colordef" % cd['colorid']
             return "<a href='%s'>%s</a>" % (url, cd['colorid'])
+
+class publish:
+    def POST(self):
+        data = web.webapi.data()
+        colordef = None
+        try:
+            colordef = json.loads(data)[0]
+        except Exception as e:
+            return "Error parsing data: %s" % e
+        try:
+            if not colordefs.ValidateColorDefinition(colordef):
+                return "Error: failed to validate"
+        except Exception as e:
+            return "Error validating: %s" % e
+        try:
+            save_colordef(colordef)
+        except Exception as e:
+            return "Error saving: %s" % e
+        return "OK"
+            
 
 if __name__ == "__main__":
     app.run()
